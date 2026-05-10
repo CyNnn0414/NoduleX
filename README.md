@@ -164,43 +164,6 @@ The backend runs locally at `http://127.0.0.1:8000`.
 npm run dev --prefix frontend
 ```
 
-### ML pipeline
-
-A typical dataset preparation and training flow is:
-
-```bash
-python ml/scripts/prepare_lidc_dataset.py --lidc-root /path/to/LIDC-IDRI --output-root ./artifacts/lidc
-python ml/scripts/train_yolo.py --dataset-yaml ./artifacts/lidc/dataset.yaml
-python ml/scripts/evaluate_yolo.py --dataset-yaml ./artifacts/lidc/dataset.yaml --weights ./artifacts/runs/train/weights/best.pt
-```
-
-### Count accuracy evaluation
-
-Use `ml/scripts/evaluate_count_accuracy.py` to compare predicted patient-level nodule counts against the official `lidc-idri-nodule-counts-6-23-2015.xlsx` spreadsheet for nodules `>= 3 mm`.
-
-```bash
-python ml/scripts/evaluate_count_accuracy.py \
-  --manifest ./artifacts/lidc/manifest.json \
-  --count-xlsx /path/to/lidc-idri-nodule-counts-6-23-2015.xlsx \
-  --weights ./artifacts/runs/lidc_yolo/weights/best.pt \
-  --output-json ./artifacts/experiments/lidc_count_eval/count_metrics.json \
-  --output-csv ./artifacts/experiments/lidc_count_eval/count_predictions.csv
-```
-
-### First-200-patient experiment
-
-```bash
-python ml/scripts/run_first200_experiment.py \
-  --lidc-root /path/to/LIDC-IDRI \
-  --count-xlsx /path/to/lidc-idri-nodule-counts-6-23-2015.xlsx \
-  --prepared-root ./artifacts/lidc \
-  --output-root ./artifacts/experiments/lidc_first200 \
-  --patient-count 200 \
-  --epochs 5 \
-  --batch 8 \
-  --device cpu
-```
-
 ## Experimental snapshot
 
 The current repository includes preliminary experiments centered on the detection stage.

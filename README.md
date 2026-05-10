@@ -57,6 +57,14 @@ flowchart TD
     G --> H["OpenAI-backed assistant answers from study context"]
 ```
 
+## Dataset
+
+Download the LIDC-IDRI data and related project assets from:
+
+- [Google Drive dataset folder](https://drive.google.com/drive/folders/1odQg7c-d9joJnZ3e1FmliXgGxUZjzqrK?usp=drive_link)
+
+After downloading, place the dataset wherever you prefer on your machine and point the ML scripts at that location with the command-line flags shown below. The README does not assume any computer-specific directory layout.
+
 ## Running locally
 
 ### Backend
@@ -88,7 +96,7 @@ npm run dev --prefix frontend
 
 ### ML pipeline
 
-The ML scripts expect a local copy of LIDC-IDRI and its XML annotations. A typical preparation flow:
+The ML scripts expect a downloaded copy of LIDC-IDRI plus its XML annotations. A typical preparation flow is:
 
 ```bash
 python ml/scripts/prepare_lidc_dataset.py --lidc-root /path/to/LIDC-IDRI --output-root ./artifacts/lidc
@@ -110,18 +118,10 @@ General usage:
 ```bash
 python ml/scripts/evaluate_count_accuracy.py \
   --manifest ./artifacts/lidc/manifest.json \
-  --count-xlsx "/path/to/lidc-idri-nodule-counts-6-23-2015.xlsx" \
+  --count-xlsx /path/to/lidc-idri-nodule-counts-6-23-2015.xlsx \
   --weights ./artifacts/runs/lidc_yolo/weights/best.pt \
   --output-json ./artifacts/experiments/lidc_count_eval/count_metrics.json \
   --output-csv ./artifacts/experiments/lidc_count_eval/count_predictions.csv
-```
-
-On this machine, you can use the local helper script so you do not need to retype the spreadsheet path:
-
-```bash
-./scripts/evaluate_count_accuracy_local.sh \
-  ./artifacts/lidc/manifest.json \
-  ./artifacts/runs/lidc_yolo/weights/best.pt
 ```
 
 The evaluator writes:
@@ -141,8 +141,8 @@ If you want to run the first-200-patient experiment end to end, use:
 
 ```bash
 python ml/scripts/run_first200_experiment.py \
-  --lidc-root "/Users/yuxinzhang/Desktop/BC senior 2nd/Biomedical Image Analysis/Final_Project/Dataset" \
-  --count-xlsx "/Users/yuxinzhang/Desktop/BC senior 2nd/Biomedical Image Analysis/Final_Project/Dataset/lidc-idri-nodule-counts-6-23-2015.xlsx" \
+  --lidc-root /path/to/LIDC-IDRI \
+  --count-xlsx /path/to/lidc-idri-nodule-counts-6-23-2015.xlsx \
   --prepared-root ./artifacts/lidc \
   --output-root ./artifacts/experiments/lidc_first200 \
   --patient-count 200 \
@@ -150,19 +150,6 @@ python ml/scripts/run_first200_experiment.py \
   --batch 8 \
   --device cpu
 ```
-
-For this machine, I found a local dataset copy here:
-
-```text
-/Users/yuxinzhang/Desktop/BC senior 2nd/Biomedical Image Analysis/Final_Project/Dataset
-```
-
-That folder contains both:
-
-- `TCIA_LIDC-IDRI_20200921/lidc_idri/...` for the DICOM studies
-- `LIDC-XML-only/tcia-lidc-xml/...` for the annotations
-
-You can use the helper script below to avoid retyping the full path.
 
 ## Chat configuration
 
